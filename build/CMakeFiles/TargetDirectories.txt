@@ -1,0 +1,3 @@
+/Users/samuel/repos/cdemo/build/CMakeFiles/rebuild_cache.dir
+/Users/samuel/repos/cdemo/build/CMakeFiles/edit_cache.dir
+/Users/samuel/repos/cdemo/build/CMakeFiles/cdemo.dir

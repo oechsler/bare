@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/samuel/repos/cdemo/src/System/Events/Dispatch.hpp
+functional
+-
+queue
+-
+vector
+-
+Event.hpp
+/Users/samuel/repos/cdemo/src/System/Events/Event.hpp
+Handler.hpp
+/Users/samuel/repos/cdemo/src/System/Events/Handler.hpp
+
+/Users/samuel/repos/cdemo/src/System/Events/Event.hpp
+
+/Users/samuel/repos/cdemo/src/System/Events/Handler.hpp
+functional
+-
+Event.hpp
+/Users/samuel/repos/cdemo/src/System/Events/Event.hpp
+
+/Users/samuel/repos/cdemo/src/main.cpp
+System/Events/Dispatch.hpp
+/Users/samuel/repos/cdemo/src/System/Events/Dispatch.hpp
+iostream
+-
+
