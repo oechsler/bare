@@ -1,8 +1,10 @@
 #include "System/Events/Dispatch.hpp"
+#include "System/Logging/Logger.hpp"
 
 #include <iostream>
 
 using namespace Bare::System::Events;
+using namespace Bare::System::Logging;
 
 class CustomEvent : public Event
 {
@@ -32,7 +34,8 @@ void customHandler(CustomEvent *event)
     if (event == nullptr)
         return;
 
-    std::cout << "[CustomEvent]: " << event->getData() << std::endl;
+    Logger logger = Logger<CustomEvent>();
+    logger.logInformation(event->getData());
 }
 
 int main(int argc, char **argv)
