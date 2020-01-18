@@ -6,8 +6,13 @@ namespace Bare::System::Events
 
 class Event
 {
+    bool handled;
+
 public:
     virtual ~Event() {}
+
+    void handle();
+    bool isHandled() const;
 };
 
 } // namespace Bare::System::Events
