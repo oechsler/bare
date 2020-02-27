@@ -16,15 +16,12 @@
                 "./build",
                 "."
             ],
-            "group": "build",
+            "group": "build"
         },
         {
             "label": "build",
             "command": "cmake",
-            "args": [
-                "--build",
-                "./build"
-            ],
+            "args": ["--build", "./build"],
             "group": "build",
             "dependsOn": "generate"
         }
