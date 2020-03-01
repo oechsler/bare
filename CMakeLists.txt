@@ -4,28 +4,41 @@ project(cdemo VERSION 0.0.1)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 
-# Fmt library
+# Find Fmt library
 find_package(FMT REQUIRED)
 
-# SDL2 core library
+# Find SDL2 library
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
-# SDL2_gpu extension library
+# Find SDL2_gpu library
 find_package(SDL_GPU REQUIRED)
 include_directories(${SDL_GPU_INCLUDE_DIR})
 
-# OpenGL library
+# Find OpenGL library
 find_package(OPENGL REQUIRED)
 
+# Retrive all project header and source files
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
-file(GLOB SOURCE_FILES "src/*.cpp"
-                       "src/System/*.cpp"
-                       "src/System/Events/*.cpp"
-                       "src/System/Display/*.cpp")
+set(HEADER_FILES "src/System/Logging/Logger.hpp"
+                 "src/System/Events/Dispatch.hpp"
+                 "src/System/Events/Event.hpp"
+                 "src/System/Events/Handler.hpp"
+                 "src/System/Display/AspectRatio.hpp"
+                 "src/System/Display/IWindow.hpp"
+                 "src/System/Display/Window.hpp")
 
-add_executable("${PROJECT_NAME}" ${SOURCE_FILES})
+set(SOURCE_FILES "src/main.cpp"
+                 "src/System/Events/Dispatch.cpp"
+                 "src/System/Events/Event.cpp"
+                 "src/System/Display/AspectRatio.cpp"
+                 "src/System/Display/Window.cpp")
+
+# Build the executable
+add_executable("${PROJECT_NAME}" ${HEADER_FILES} ${SOURCE_FILES})
+
+# Link the executable against all retrived dependencies
 target_link_libraries("${PROJECT_NAME}" fmt::fmt
                                         ${SDL2_LIBRARY}
                                         ${SDL_GPU_LIBRARY}
