@@ -1,6 +1,9 @@
 #include "Window.hpp"
 
 #include "WindowCloseEvent.hpp"
+#include "System/Exception.hpp"
+
+using Bare::System::Exception;
 
 namespace Bare::System::Display
 {
@@ -13,6 +16,10 @@ Window::Window(Dispatch *dispatch)
 Window::~Window()
 {
     // TODO: Detach event handlers
+
+    SDL_DestroyWindow(windowHandle);
+
+    SDL_Quit();
 }
 
 void Window::initialize(const string &title, int width, AspectRatio aspect, float scale)
@@ -25,8 +32,11 @@ void Window::initialize(const string &title, int width, AspectRatio aspect, floa
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER))
     {
-        auto error = SDL_GetError();
-        logger.logFatal("SDL initialized with error: {}", error);
+        auto error = string(SDL_GetError());
+        auto errorMessage = "SDL could not be initialized: " + error;
+
+        logger.logError(errorMessage);
+        throw Exception(errorMessage);
     }
 
     // Default window settings for the SDL sub-system
@@ -37,6 +47,14 @@ void Window::initialize(const string &title, int width, AspectRatio aspect, floa
 
     windowHandle = SDL_CreateWindow(title.c_str(), position, position,
                                     this->width, this->height, flags);
+    if (windowHandle == nullptr)
+    {
+        auto error = string(SDL_GetError());
+        auto errorMessage = "Window could not be created: " + error;
+
+        logger.logError(errorMessage);
+        throw Exception(errorMessage);
+    }
 
     SDL_SetWindowMinimumSize(windowHandle, this->width, this->height);
 }

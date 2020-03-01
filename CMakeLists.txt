@@ -21,7 +21,8 @@ find_package(OPENGL REQUIRED)
 # Retrive all project header and source files
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
-set(HEADER_FILES "src/System/Logging/Logger.hpp"
+set(HEADER_FILES "src/System/Exception.hpp"
+                 "src/System/Logging/Logger.hpp"
                  "src/System/Events/Dispatch.hpp"
                  "src/System/Events/Event.hpp"
                  "src/System/Events/Handler.hpp"
@@ -30,6 +31,7 @@ set(HEADER_FILES "src/System/Logging/Logger.hpp"
                  "src/System/Display/Window.hpp")
 
 set(SOURCE_FILES "src/main.cpp"
+                 "src/System/Exception.cpp"
                  "src/System/Events/Dispatch.cpp"
                  "src/System/Events/Event.cpp"
                  "src/System/Display/AspectRatio.cpp"

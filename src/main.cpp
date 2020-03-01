@@ -3,7 +3,6 @@
 #include "System/Display/Window.hpp"
 #include "System/Display/WindowCloseEvent.hpp"
 
-#include <fmt/format.h>
 #include <iostream>
 
 using namespace Bare::System::Events;
@@ -28,7 +27,7 @@ int main(int argc, char **argv)
     int handle = dispatch.attach(onWindowClose, WindowCloseEvent::Convert);
 
     Window window(&dispatch);
-    window.initialize("Hello World", 480);
+    window.initialize("Hello World", 720, AspectRatio(16, 9), 1.2);
 
     while (running)
     {
