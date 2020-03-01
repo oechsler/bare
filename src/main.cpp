@@ -1,10 +1,9 @@
-#include "System/Events/Dispatch.hpp"
 #include "System/Logging/Logger.hpp"
+#include "System/Events/Dispatch.hpp"
 #include "System/Display/Window.hpp"
 #include "System/Display/WindowCloseEvent.hpp"
 
 #include <fmt/format.h>
-
 #include <iostream>
 
 using namespace Bare::System::Events;

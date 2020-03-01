@@ -35,8 +35,10 @@ set(SOURCE_FILES "src/main.cpp"
                  "src/System/Display/AspectRatio.cpp"
                  "src/System/Display/Window.cpp")
 
+
 # Build the executable
 add_executable("${PROJECT_NAME}" ${HEADER_FILES} ${SOURCE_FILES})
+#target_compile_definitions("${PROJECT_NAME}" PRIVATE LOG_LEVEL=2)
 
 # Link the executable against all retrived dependencies
 target_link_libraries("${PROJECT_NAME}" fmt::fmt
