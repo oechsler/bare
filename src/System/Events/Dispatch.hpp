@@ -26,7 +26,7 @@ class Dispatch
 public:
     Dispatch();
 
-    void send(Event *event);
+    void raise(Event *event);
 
     template <typename Delegate, typename Converter>
     int attach(const Delegate &delegate, const Converter &converter)

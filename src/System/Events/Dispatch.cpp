@@ -7,7 +7,7 @@ Dispatch::Dispatch()
 {
 }
 
-void Dispatch::send(Event *event)
+void Dispatch::raise(Event *event)
 {
     events.push(event);
 }
@@ -33,8 +33,13 @@ void Dispatch::handleEvents()
         for (auto attachedHandler : handlers)
         {
             attachedHandler(event);
+
+            if (event->isHandled())
+                break;
         }
+
+        delete event;
     }
 }
 
-} // namespace Bare::System
+} // namespace Bare::System::Events
