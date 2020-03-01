@@ -1,25 +1,23 @@
 #ifndef LOGGER_HPP
 #define LOGGER_HPP
 
-#include <iostream>
-#include <stdlib.h>
 #include <string>
+#include <memory>
 #include <typeinfo>
 #include <cxxabi.h>
-#include <chrono>
-#include <iomanip>
-#include <ctime>
-#include <sstream>
+#include <fmt/format.h>
+#include <fmt/chrono.h>
+#include <fmt/color.h>
 
-using std::cout;
-using std::endl;
+using fmt::format;
+using fmt::format_args;
+using fmt::make_format_args;
+using fmt::print;
+using fmt::vformat;
 using std::free;
 using std::localtime;
-using std::put_time;
 using std::string;
-using std::stringstream;
 using std::unique_ptr;
-using std::chrono::system_clock;
 
 namespace Bare::System::Logging
 {
@@ -27,16 +25,21 @@ namespace Bare::System::Logging
 template <typename T>
 class Logger
 {
-    static const char* demangle(const char *mangled);
+    static const char *demangle(const char *mangled);
 
-    void log(const char *channel, const char *message);
+    void log(const string &channel, const string &message, format_args args);
 
 public:
-    virtual void logDebug(const char *message);
-    virtual void logInformation(const char *message);
-    virtual void logWarning(const char *message);
-    virtual void logError(const char *message);
-    virtual void logFatal(const char *message, int exitCode = 1);
+    template <typename... Args>
+    void logDebug(const string &message, const Args &... args);
+    template <typename... Args>
+    void logInformation(const string &message, const Args &... args);
+    template <typename... Args>
+    void logWarning(const string &message, const Args &... args);
+    template <typename... Args>
+    void logError(const string &message, const Args &... args);
+    template <typename... Args>
+    void logFatal(const string &message, const Args &... args);
 };
 
 #define CHANNEL_DEBUG "DEBUG"
@@ -45,54 +48,68 @@ public:
 #define CHANNEL_ERROR "\33[31mERROR\33[0m"
 #define CHANNEL_FATAL "\33[37;41mFATAL\33[0;0m"
 
-template<typename T>
-void Logger<T>::log(const char* channel, const char *message)
+template <typename T>
+void Logger<T>::log(const string &channel, const string &message, format_args args)
 {
-    auto time = system_clock::to_time_t(system_clock::now());
-    auto timeString = put_time(localtime(&time), "%H:%M:%S");
+    // Generate current timestamp
+    auto now = time(nullptr);
+    auto timeString = format("{:%H:%M:%S}", *localtime(&now));
 
-    auto target = demangle(typeid(T).name());
+    // Get the name of the logger's target
+    auto targetString = demangle(typeid(T).name());
 
-    cout << "[" << timeString << " " << channel << " (" << target << ")" << "]: " << message << endl;
+    // Finally generate log message
+    auto messageString = format("[{0} {1}]({2}): {3}\n", channel, timeString, targetString, message);
+    auto printString = vformat(messageString, args);
+
+    // Print generated log message to stdout
+    print(printString);
+
+    // TODO: Add other print options for ex.: file, etc.
 }
 
-template<typename T>
-const char* Logger<T>::demangle(const char* mangled)
+template <typename T>
+const char *Logger<T>::demangle(const char *mangled)
 {
     int status;
     unique_ptr<char[], void (*)(void *)> result(abi::__cxa_demangle(mangled, 0, 0, &status), free);
     return result.get() ? result.get() : nullptr;
 }
 
-template<typename T>
-void Logger<T>::logDebug(const char* message)
+template <typename T>
+template <typename... Args>
+void Logger<T>::logDebug(const string &message, const Args &... args)
 {
-    log(CHANNEL_DEBUG, message);
+    log(CHANNEL_DEBUG, message, make_format_args(args...));
 }
 
-template<typename T>
-void Logger<T>::logInformation(const char* message)
+template <typename T>
+template <typename... Args>
+void Logger<T>::logInformation(const string &message, const Args &... args)
 {
-    log(CHANNEL_INFO, message);
+    log(CHANNEL_INFO, message, make_format_args(args...));
 }
 
-template<typename T>
-void Logger<T>::logWarning(const char* message)
+template <typename T>
+template <typename... Args>
+void Logger<T>::logWarning(const string &message, const Args &... args)
 {
-    log(CHANNEL_WARN, message);
+    log(CHANNEL_WARN, message, make_format_args(args...));
 }
 
-template<typename T>
-void Logger<T>::logError(const char* message)
+template <typename T>
+template <typename... Args>
+void Logger<T>::logError(const string &message, const Args &... args)
 {
-    log(CHANNEL_ERROR, message);
+    log(CHANNEL_ERROR, message, make_format_args(args...));
 }
 
-template<typename T>
-void Logger<T>::logFatal(const char* message, int exitCode)
+template <typename T>
+template <typename... Args>
+void Logger<T>::logFatal(const string &message, const Args &... args)
 {
-    log(CHANNEL_FATAL, message);
-    exit(exitCode);
+    log(CHANNEL_FATAL, message, make_format_args(args...));
+    exit(1);
 }
 
 } // namespace Bare::System::Logging
