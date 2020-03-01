@@ -15,7 +15,7 @@ class IWindow
 public:
     virtual ~IWindow() {}
 
-    virtual void initialize(string title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) = 0;
+    virtual void initialize(const string &title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) = 0;
 
     virtual void handleEvents() = 0;
 };

@@ -1,6 +1,7 @@
 #include "System/Events/Dispatch.hpp"
 #include "System/Logging/Logger.hpp"
 #include "System/Display/Window.hpp"
+#include "System/Display/WindowCloseEvent.hpp"
 
 #include <fmt/format.h>
 
@@ -10,58 +11,33 @@ using namespace Bare::System::Events;
 using namespace Bare::System::Logging;
 using namespace Bare::System::Display;
 
-// class CustomEvent : public Event
-// {
-//     const char *data;
+bool running = true;
 
-// public:
-//     CustomEvent(const char *data)
-//     {
-//         this->data = data;
-//     }
+void onWindowClose(WindowCloseEvent *event)
+{
+    if (event == nullptr)
+        return;
 
-//     const char *getData() const
-//     {
-//         return data;
-//     }
-
-//     static CustomEvent *Convert(Event *event)
-//     {
-//         if (auto customEvent = dynamic_cast<CustomEvent *>(event))
-//             return customEvent;
-//         return nullptr;
-//     }
-// };
-
-// void customHandler(CustomEvent *event)
-// {
-//     if (event == nullptr)
-//         return;
-
-//     Logger logger = Logger<CustomEvent>();
-//     logger.logInformation(event->getData());
-
-//     event->handle();
-// }
+    running = false;
+    event->handle();
+}
 
 int main(int argc, char **argv)
 {
     Dispatch dispatch;
-    // int handle = d.attach(customHandler, CustomEvent::Convert);
 
-    // Event *event = new CustomEvent("Hello World");
-    // d.raise(event);
+    int handle = dispatch.attach(onWindowClose, WindowCloseEvent::Convert);
 
-    Window window(dispatch);
+    Window window(&dispatch);
     window.initialize("Hello World", 480);
 
-    while (true)
+    while (running)
     {
         window.handleEvents();
         dispatch.handleEvents();
     }
 
-    // dispatch.detach(handle);
+    dispatch.detach(handle);
 
     return 0;
 }

@@ -1,9 +1,11 @@
 #include "Window.hpp"
 
+#include "WindowCloseEvent.hpp"
+
 namespace Bare::System::Display
 {
 
-Window::Window(Dispatch dispatch)
+Window::Window(Dispatch *dispatch)
     : dispatch(dispatch)
 {
 }
@@ -13,7 +15,7 @@ Window::~Window()
     // TODO: Detach event handlers
 }
 
-void Window::initialize(string title, int width, AspectRatio aspect, float scale)
+void Window::initialize(const string &title, int width, AspectRatio aspect, float scale)
 {
     initialWidth = width * scale;
     initialHeight = aspect.getHeight(width) * scale;
@@ -41,6 +43,18 @@ void Window::initialize(string title, int width, AspectRatio aspect, float scale
 
 void Window::handleEvents()
 {
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            auto windowCloseEvent = new WindowCloseEvent();
+            dispatch->raise(windowCloseEvent);
+            break;
+        }
+    }
 }
 
 } // namespace Bare::System::Display

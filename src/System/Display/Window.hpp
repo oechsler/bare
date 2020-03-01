@@ -15,7 +15,7 @@ namespace Bare::System::Display
 
 class Window : public IWindow
 {
-    Dispatch dispatch;
+    Dispatch *dispatch;
     Logger<Window> logger;
 
     SDL_Window *windowHandle;
@@ -23,10 +23,10 @@ class Window : public IWindow
     int width, height;
 
 public:
-    Window(Dispatch dispatch);
+    Window(Dispatch *dispatch);
     ~Window();
 
-    void initialize(string title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) override;
+    void initialize(const string &title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) override;
 
     void handleEvents() override;
 };
