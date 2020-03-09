@@ -1,29 +1,42 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include "IWindow.hpp"
-#include "System/Events/Dispatch.hpp"
-#include "System/Logging/Logger.hpp"
-
+#include <memory>
 #include <SDL2/SDL.h>
 
-using Bare::System::Events::Dispatch;
+#include "IWindow.hpp"
+#include "System/Events/IDispatch.hpp"
+#include "System/Logging/Logger.hpp"
+
+using Bare::System::Events::IDispatch;
 using Bare::System::Logging::Logger;
+using std::shared_ptr;
 
 namespace Bare::System::Display
 {
 
 class Window : public IWindow
 {
-    Dispatch *dispatch;
-    Logger<Window> logger;
+    // Dependency injection
+    shared_ptr<IDispatch> dispatch;
+    // END: Dependency injection
 
+    // Local instances
+    Logger<Window> logger;
+    // END: Local instances
+
+    // Variables / properties
     SDL_Window *windowHandle;
     int initialWidth, initialHeight;
     int width, height;
+    // END: Variables / properties
+
+    // Event handlers
+    // TODO: Add event handler references here
+    // END: Event handlers
 
 public:
-    Window(Dispatch *dispatch);
+    Window(const shared_ptr<IDispatch> &dispatch);
     ~Window();
 
     void initialize(const string &title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) override;

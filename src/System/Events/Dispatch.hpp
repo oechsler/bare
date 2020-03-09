@@ -1,12 +1,10 @@
 #ifndef DISPATCH_HPP
 #define DISPATCH_HPP
 
-#include <functional>
 #include <queue>
 #include <vector>
 
-#include "Event.hpp"
-#include "Handler.hpp"
+#include "IDispatch.hpp"
 
 using std::queue;
 using std::vector;
@@ -14,20 +12,19 @@ using std::vector;
 namespace Bare::System::Events
 {
 
-class Dispatch
+class Dispatch : public IDispatch
 {
-    queue<Event *> events;
+    // Variables / properties
+    queue<Event *const> events;
     vector<Handler> handlers;
+    // END: Variables / properties
 
 public:
-    Dispatch();
+    int attach(const Handler &handler) override;
+    void detach(int identifier) override;
 
-    void raise(Event *event);
-
-    int attach(const Handler &handler);
-    void detach(int identifier);
-
-    void handleEvents();
+    void raise(Event *const event) override;
+    void handleEvents() override;
 };
 
 } // namespace Bare::System::Events

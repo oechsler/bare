@@ -62,10 +62,18 @@
         "typeinfo": "cpp",
         "unordered_map": "cpp",
         "utility": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "__tree": "cpp",
+        "iomanip": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "numeric": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "strstream": "cpp",
+        "typeindex": "cpp",
+        "unordered_set": "cpp",
+        "variant": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Disabled",
-    "cSpell.words": [
-        "vformat"
-    ]
+    "C_Cpp.errorSquiggles": "Disabled"
 }

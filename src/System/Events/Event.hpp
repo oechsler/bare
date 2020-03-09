@@ -6,7 +6,9 @@ namespace Bare::System::Events
 
 class Event
 {
+    // Variables / properties
     bool handled;
+    // END: Variables / properties
 
 public:
     virtual ~Event() {}

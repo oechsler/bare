@@ -11,9 +11,9 @@ namespace Bare::System::Display
 class WindowCloseEvent : public Event
 {
 public:
-    static WindowCloseEvent *Convert(Event *event)
+    static WindowCloseEvent *const Convert(Event *const event)
     {
-        if (auto windowCloseEvent = dynamic_cast<WindowCloseEvent *>(event))
+        if (auto windowCloseEvent = dynamic_cast<WindowCloseEvent *const>(event))
             return windowCloseEvent;
         return nullptr;
     }

@@ -1,36 +1,53 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include "IApplication.hpp"
-#include "System/Events/Dispatch.hpp"
-#include "System/Logging/Logger.hpp"
-#include "System/Display/Window.hpp"
-#include "System/Display/WindowCloseEvent.hpp"
-
+#include <memory>
 #include "Hypodermic/Hypodermic.h"
 
-using Bare::System::Display::Window;
+#include "IApplication.hpp"
+#include "System/Events/IDispatch.hpp"
+#include "System/Display/IWindow.hpp"
+#include "System/Logging/Logger.hpp"
+#include "System/Display/WindowCloseEvent.hpp"
+
+using Bare::System::Display::IWindow;
 using Bare::System::Display::WindowCloseEvent;
-using Bare::System::Events::Dispatch;
+using Bare::System::Events::IDispatch;
 using Bare::System::Logging::Logger;
+using Hypodermic::Container;
+using Hypodermic::ContainerBuilder;
+using std::shared_ptr;
 
 namespace Bare::System
 {
 
 class Application : public IApplication
 {
-    Dispatch dispatch;
+    // Depedency injection
+    ContainerBuilder *const containerBuilder;
+
+    shared_ptr<Container> container;
+    shared_ptr<IDispatch> dispatch;
+    shared_ptr<IWindow> window;
+    // END: Dependency injection
+
+    // Local instances
     Logger<Application> logger;
+    // END: Local instances
 
-    Window window;
-
+    // Variables / properties
     bool running;
+    // END: Variables / peroperties
 
+    // Event handlers
     int onWindowCloseHandle;
-    void onWindowClose(WindowCloseEvent *event);
+    void onWindowClose(WindowCloseEvent *const event);
+    // END: Event handlers
+
+    void initialize();
 
 public:
-    Application();
+    Application(ContainerBuilder *const containerBuilder);
     ~Application();
 
     void run() override;

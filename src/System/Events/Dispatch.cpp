@@ -3,15 +3,6 @@
 namespace Bare::System::Events
 {
 
-Dispatch::Dispatch()
-{
-}
-
-void Dispatch::raise(Event *event)
-{
-    events.push(event);
-}
-
 int Dispatch::attach(const Handler &handler)
 {
     handlers.push_back(handler);
@@ -21,6 +12,11 @@ int Dispatch::attach(const Handler &handler)
 void Dispatch::detach(int identifier)
 {
     handlers.erase(handlers.begin() + identifier);
+}
+
+void Dispatch::raise(Event *const event)
+{
+    events.push(event);
 }
 
 void Dispatch::handleEvents()

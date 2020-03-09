@@ -12,7 +12,9 @@ namespace Bare::System
 
 class Exception : public exception
 {
+    // Variables / properties
     string message;
+    // END: Variables / properties
 
 public:
     Exception(const string &message);

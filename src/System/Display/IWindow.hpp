@@ -1,9 +1,9 @@
 #ifndef I_WINDOW_HPP
 #define I_WINDOW_HPP
 
-#include "AspectRatio.hpp"
-
 #include <string>
+
+#include "AspectRatio.hpp"
 
 using std::string;
 

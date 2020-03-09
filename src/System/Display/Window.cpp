@@ -8,7 +8,7 @@ using Bare::System::Exception;
 namespace Bare::System::Display
 {
 
-Window::Window(Dispatch *dispatch)
+Window::Window(const shared_ptr<IDispatch> &dispatch)
     : dispatch(dispatch)
 {
 }
