@@ -21,4 +21,4 @@ public:
 
 } // namespace Bare::System::Display
 
-#endif
+#endif // WINDOW_CLOSE_EVENT_HPP

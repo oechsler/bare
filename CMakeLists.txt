@@ -22,6 +22,8 @@ find_package(OPENGL REQUIRED)
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
 set(HEADER_FILES "src/System/Exception.hpp"
+                 "src/System/IApplication.hpp"
+                 "src/System/Application.hpp"
                  "src/System/Logging/Logger.hpp"
                  "src/System/Events/Dispatch.hpp"
                  "src/System/Events/Event.hpp"
@@ -32,6 +34,7 @@ set(HEADER_FILES "src/System/Exception.hpp"
 
 set(SOURCE_FILES "src/main.cpp"
                  "src/System/Exception.cpp"
+                 "src/System/Application.cpp"
                  "src/System/Events/Dispatch.cpp"
                  "src/System/Events/Event.cpp"
                  "src/System/Display/AspectRatio.cpp"

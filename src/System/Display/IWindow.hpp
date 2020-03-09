@@ -13,7 +13,7 @@ namespace Bare::System::Display
 class IWindow
 {
 public:
-    virtual ~IWindow() {}
+    virtual ~IWindow() = default;
 
     virtual void initialize(const string &title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) = 0;
 
