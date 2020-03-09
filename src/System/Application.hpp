@@ -7,6 +7,8 @@
 #include "System/Display/Window.hpp"
 #include "System/Display/WindowCloseEvent.hpp"
 
+#include "Hypodermic/Hypodermic.h"
+
 using Bare::System::Display::Window;
 using Bare::System::Display::WindowCloseEvent;
 using Bare::System::Events::Dispatch;
