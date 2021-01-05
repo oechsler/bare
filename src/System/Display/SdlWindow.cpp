@@ -1,6 +1,9 @@
-#include "Window.hpp"
+#include "SdlWindow.hpp"
+
+#include <SDL2/SDL_syswm.h>
 
 #include "WindowCloseEvent.hpp"
+#include "SdlContextHandle.hpp"
 #include "System/Exception.hpp"
 
 using Bare::System::Exception;
@@ -8,12 +11,13 @@ using Bare::System::Exception;
 namespace Bare::System::Display
 {
 
-Window::Window(const shared_ptr<IDispatch> &dispatch)
-    : dispatch(dispatch), windowHandle(nullptr), initialWidth(0), initialHeight(0), width(0), height(0)
+SdlWindow::SdlWindow(const shared_ptr<IDispatch> &dispatch, const shared_ptr<IRenderer> &renderer)
+    : dispatch(dispatch), renderer(renderer), windowHandle(nullptr), initialWidth(0), initialHeight(0),
+    width(0), height(0)
 {
 }
 
-Window::~Window()
+SdlWindow::~SdlWindow()
 {
     // TODO: Detach event handlers
 
@@ -22,7 +26,7 @@ Window::~Window()
     SDL_Quit();
 }
 
-void Window::initialize(const string &title, int size, AspectRatio aspect, float scale)
+void SdlWindow::initialize(const string &title, int size, AspectRatio aspect, float scale)
 {
     initialWidth = (int) ((float) size * scale);
     initialHeight = (int) ((float) aspect.getHeight(size) * scale);
@@ -56,9 +60,37 @@ void Window::initialize(const string &title, int size, AspectRatio aspect, float
     }
 
     SDL_SetWindowMinimumSize(windowHandle, width, height);
+
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version);
+    if (!SDL_GetWindowWMInfo(windowHandle, &wmInfo))
+    {
+        auto error = string(SDL_GetError());
+        auto errorMessage = "SDL window manager info could not be created: " + error;
+
+        logger.logError(errorMessage);
+        throw Exception(errorMessage);
+    }
+
+    SdlContextHandle* contextHandle;
+    switch (wmInfo.subsystem) {
+        case SDL_SYSWM_COCOA:
+            contextHandle = new SdlContextHandle(nullptr, wmInfo.info.cocoa.window);
+
+            break;
+        default:
+            auto errorMessage = "SDL does not support this platform";
+
+            logger.logError(errorMessage);
+            throw Exception(errorMessage);
+    }
+
+    renderer->initialize(*contextHandle);
+
+    delete contextHandle;
 }
 
-void Window::handleEvents()
+void SdlWindow::handleEvents()
 {
     SDL_Event event;
 
@@ -73,13 +105,7 @@ void Window::handleEvents()
         }
     }
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(windowHandle, -1, 0);
-
-    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-
-    SDL_RenderClear(renderer);
-
-    SDL_RenderPresent(renderer);
+    renderer->render();
 }
 
 } // namespace Bare::System::Display

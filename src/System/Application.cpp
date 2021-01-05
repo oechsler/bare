@@ -1,11 +1,13 @@
 #include "Application.hpp"
 
 #include "System/Events/Dispatch.hpp"
-#include "System/Display/Window.hpp"
+#include "System/Display/SdlWindow.hpp"
+#include "System/Renderer/BgfxRenderer.hpp"
 
-using Bare::System::Display::Window;
-using Bare::System::Display::AspectRatio;
+using Bare::System::Renderer::BgfxRenderer;
+using Bare::System::Display::SdlWindow;
 using Bare::System::Events::Dispatch;
+using Bare::System::Display::AspectRatio;
 using Bare::System::Events::Handler;
 
 namespace Bare::System
@@ -25,12 +27,13 @@ Application::Application(ContainerBuilder *containerBuilder)
 
     // Register default dependency injection modules
     containerBuilder->registerType<Dispatch>().as<IDispatch>().singleInstance();
-    containerBuilder->registerType<Window>().as<IWindow>().singleInstance();
+    containerBuilder->registerType<SdlWindow>().as<IWindow>().singleInstance();
+    containerBuilder->registerType<BgfxRenderer>().as<IRenderer>().singleInstance();
 }
 
 Application::~Application()
 {
-    logger.logInformation("Bare is terminating ...");
+    logger.logInformation("Hold on! We're going down");
 
     // Detach event handlers
     dispatch->detach(onWindowCloseHandle);
@@ -51,7 +54,7 @@ void Application::initialize()
     });
 
     // Initialize the window
-    window->initialize("Bare", 720, AspectRatio(16, 9), 1);
+    window->initialize("Bare", 720, AspectRatio(16, 9), 1.2f);
 }
 
 void Application::run()

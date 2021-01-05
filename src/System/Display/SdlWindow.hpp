@@ -6,23 +6,27 @@
 
 #include "IWindow.hpp"
 #include "System/Events/IDispatch.hpp"
+#include "System/Renderer/IRenderer.hpp"
 #include "System/Logging/Logger.hpp"
 
 using Bare::System::Events::IDispatch;
+using Bare::System::Renderer::IRenderer;
 using Bare::System::Logging::Logger;
 using std::shared_ptr;
 
 namespace Bare::System::Display
 {
 
-class Window : public IWindow
+class SdlWindow : public IWindow
 {
     // Dependency injection
     shared_ptr<IDispatch> dispatch;
+
+    shared_ptr<IRenderer> renderer;
     // END: Dependency injection
 
     // Local instances
-    Logger<Window> logger;
+    Logger<SdlWindow> logger;
     // END: Local instances
 
     // Variables / properties
@@ -36,8 +40,8 @@ class Window : public IWindow
     // END: Event handlers
 
 public:
-    explicit Window(const shared_ptr<IDispatch> &dispatch);
-    ~Window() override;
+    explicit SdlWindow(const shared_ptr<IDispatch> &dispatch, const shared_ptr<IRenderer> &renderer);
+    ~SdlWindow() override;
 
     void initialize(const string &title, int size, AspectRatio aspect, float scale) override;
 
