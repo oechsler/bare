@@ -11,8 +11,8 @@ struct AspectRatio
     AspectRatio();
     AspectRatio(int x, int y);
 
-    int getHeight(int width);
-    int getWidth(int height);
+    [[nodiscard]] int getHeight(int width) const;
+    [[nodiscard]] int getWidth(int height) const;
 };
 
 } // namespace Bare::System::Display

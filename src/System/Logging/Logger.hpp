@@ -83,7 +83,7 @@ const char *Logger<T>::demangle(const char *mangled)
 {
     int status;
     unique_ptr<char[], void (*)(void *)> result(abi::__cxa_demangle(mangled, 0, 0, &status), free);
-    return result.get() ? result.get() : nullptr;
+    return result ? result.get() : nullptr;
 }
 
 template <typename T>

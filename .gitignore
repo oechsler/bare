@@ -1,1 +1,11 @@
 build/
+
+extern/Makefile
+extern/build/
+extern/bin/
+extern/cmake_install.cmake
+extern/include/
+extern/CMakeFiles/
+extern/share/
+extern/lib/
+extern/CMakeCache.txt

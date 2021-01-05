@@ -9,7 +9,7 @@ namespace Bare::System::Display
 {
 
 Window::Window(const shared_ptr<IDispatch> &dispatch)
-    : dispatch(dispatch)
+    : dispatch(dispatch), windowHandle(nullptr), initialWidth(0), initialHeight(0), width(0), height(0)
 {
 }
 
@@ -22,13 +22,13 @@ Window::~Window()
     SDL_Quit();
 }
 
-void Window::initialize(const string &title, int width, AspectRatio aspect, float scale)
+void Window::initialize(const string &title, int size, AspectRatio aspect, float scale)
 {
-    initialWidth = width * scale;
-    initialHeight = aspect.getHeight(width) * scale;
+    initialWidth = (int) ((float) size * scale);
+    initialHeight = (int) ((float) aspect.getHeight(size) * scale);
 
-    this->width = initialWidth;
-    this->height = initialHeight;
+    width = initialWidth;
+    height = initialHeight;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER))
     {
@@ -50,7 +50,7 @@ void Window::initialize(const string &title, int width, AspectRatio aspect, floa
     if (windowHandle == nullptr)
     {
         auto error = string(SDL_GetError());
-        auto errorMessage = "Window could not be created: " + error;
+        auto errorMessage = "SDL window could not be created: " + error;
 
         logger.logError(errorMessage);
         throw Exception(errorMessage);

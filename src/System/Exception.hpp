@@ -17,9 +17,9 @@ class Exception : public exception
     // END: Variables / properties
 
 public:
-    Exception(const string &message);
+    explicit Exception(string message);
 
-    virtual const char *what() const throw();
+    [[nodiscard]] const char *what() const noexcept override;
 };
 
 } // namespace Bare::System

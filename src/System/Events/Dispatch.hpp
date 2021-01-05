@@ -23,7 +23,7 @@ public:
     int attach(const Handler &handler) override;
     void detach(int identifier) override;
 
-    void raise(Event *const event) override;
+    void raise(Event *event) override;
     void handleEvents() override;
 };
 

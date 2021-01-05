@@ -23,7 +23,7 @@ namespace Bare::System
 
 class Application : public IApplication
 {
-    // Depedency injection
+    // Dependency injection
     ContainerBuilder *const containerBuilder;
 
     shared_ptr<Container> container;
@@ -37,18 +37,18 @@ class Application : public IApplication
 
     // Variables / properties
     bool running;
-    // END: Variables / peroperties
+    // END: Variables / properties
 
     // Event handlers
     int onWindowCloseHandle;
-    void onWindowClose(WindowCloseEvent *const event);
+    void onWindowClose(WindowCloseEvent *event);
     // END: Event handlers
 
     void initialize();
 
 public:
-    Application(ContainerBuilder *const containerBuilder);
-    ~Application();
+    explicit Application(ContainerBuilder *containerBuilder);
+    ~Application() override;
 
     void run() override;
 };

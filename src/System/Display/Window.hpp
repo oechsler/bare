@@ -36,10 +36,10 @@ class Window : public IWindow
     // END: Event handlers
 
 public:
-    Window(const shared_ptr<IDispatch> &dispatch);
-    ~Window();
+    explicit Window(const shared_ptr<IDispatch> &dispatch);
+    ~Window() override;
 
-    void initialize(const string &title, int width, AspectRatio aspect = AspectRatio(16, 9), float scale = 1) override;
+    void initialize(const string &title, int size, AspectRatio aspect, float scale) override;
 
     void handleEvents() override;
 };

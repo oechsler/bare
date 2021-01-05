@@ -13,12 +13,12 @@ AspectRatio::AspectRatio(int x, int y)
 {
 }
 
-int AspectRatio::getHeight(int width)
+int AspectRatio::getHeight(int width) const
 {
     return width / x * y;
 }
 
-int AspectRatio::getWidth(int height)
+int AspectRatio::getWidth(int height) const
 {
     return height / y * x;
 }

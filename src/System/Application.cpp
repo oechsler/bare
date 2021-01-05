@@ -4,7 +4,9 @@
 #include "System/Display/Window.hpp"
 
 using Bare::System::Display::Window;
+using Bare::System::Display::AspectRatio;
 using Bare::System::Events::Dispatch;
+using Bare::System::Events::Handler;
 
 namespace Bare::System
 {
@@ -17,7 +19,7 @@ void Application::onWindowClose(WindowCloseEvent *const event)
 }
 
 Application::Application(ContainerBuilder *containerBuilder)
-    : containerBuilder(containerBuilder), running(true)
+    : containerBuilder(containerBuilder), running(true), onWindowCloseHandle(0)
 {
     logger.logInformation("Welcome to the Bare rendering framework");
 
@@ -44,10 +46,12 @@ void Application::initialize()
     window = container->resolve<IWindow>();
 
     // Attach event handlers
-    onWindowCloseHandle = dispatch->attach(ClassHandler(&Application::onWindowClose, WindowCloseEvent::Convert));
+    onWindowCloseHandle = dispatch->attach([this](Event* event) {
+        onWindowClose(WindowCloseEvent::Convert(event));
+    });
 
     // Initialize the window
-    window->initialize("Bare", 720);
+    window->initialize("Bare", 720, AspectRatio(16, 9), 1);
 }
 
 void Application::run()
