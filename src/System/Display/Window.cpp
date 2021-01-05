@@ -45,8 +45,7 @@ void Window::initialize(const string &title, int size, AspectRatio aspect, float
                  SDL_WINDOW_ALLOW_HIGHDPI |
                  SDL_WINDOW_SHOWN;
 
-    windowHandle = SDL_CreateWindow(title.c_str(), position, position,
-                                    this->width, this->height, flags);
+    windowHandle = SDL_CreateWindow(title.c_str(), position, position, width, height, flags);
     if (windowHandle == nullptr)
     {
         auto error = string(SDL_GetError());
@@ -56,7 +55,7 @@ void Window::initialize(const string &title, int size, AspectRatio aspect, float
         throw Exception(errorMessage);
     }
 
-    SDL_SetWindowMinimumSize(windowHandle, this->width, this->height);
+    SDL_SetWindowMinimumSize(windowHandle, width, height);
 }
 
 void Window::handleEvents()
@@ -73,6 +72,14 @@ void Window::handleEvents()
             break;
         }
     }
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(windowHandle, -1, 0);
+
+    SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+
+    SDL_RenderClear(renderer);
+
+    SDL_RenderPresent(renderer);
 }
 
 } // namespace Bare::System::Display
