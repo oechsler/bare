@@ -10,6 +10,9 @@
 #include <fmt/color.h>
 #include <boost/core/demangle.hpp>
 
+#include "System/Exception.hpp"
+
+using Bare::System::Exception;
 using fmt::format;
 using fmt::format_args;
 using fmt::make_format_args;
@@ -121,7 +124,9 @@ void Logger<T>::logFatal(const string &message, const Args &... args)
 {
 #if LOG_LEVEL <= LEVEL_FATAL
     log(CHANNEL_FATAL, message, make_format_args(args...));
-    exit(1);
+
+    // TODO: Evaluate if this solution makes sense
+    throw Exception(message);
 #endif
 }
 

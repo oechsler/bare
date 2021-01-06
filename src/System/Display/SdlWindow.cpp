@@ -55,8 +55,7 @@ void SdlWindow::initialize(const string &title, int size, AspectRatio aspect, fl
         auto error = string(SDL_GetError());
         auto errorMessage = "SDL window could not be created: " + error;
 
-        logger.logError(errorMessage);
-        throw Exception(errorMessage);
+        logger.logFatal(errorMessage);
     }
 
     SDL_SetWindowMinimumSize(windowHandle, width, height);
@@ -68,11 +67,10 @@ void SdlWindow::initialize(const string &title, int size, AspectRatio aspect, fl
         auto error = string(SDL_GetError());
         auto errorMessage = "SDL window manager info could not be created: " + error;
 
-        logger.logError(errorMessage);
-        throw Exception(errorMessage);
+        logger.logFatal(errorMessage);
     }
 
-    SdlContextHandle* contextHandle;
+    const SdlContextHandle* contextHandle;
     switch (wmInfo.subsystem) {
         case SDL_SYSWM_COCOA:
             contextHandle = new SdlContextHandle(nullptr, wmInfo.info.cocoa.window);

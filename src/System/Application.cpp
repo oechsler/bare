@@ -23,7 +23,7 @@ void Application::onWindowClose(WindowCloseEvent *const event)
 Application::Application(ContainerBuilder *containerBuilder)
     : containerBuilder(containerBuilder), running(true), onWindowCloseHandle(0)
 {
-    logger.logInformation("Welcome to the Bare rendering framework");
+    logger.logInformation("Bare is warming up");
 
     // Register default dependency injection modules
     containerBuilder->registerType<Dispatch>().as<IDispatch>().singleInstance();
@@ -55,6 +55,8 @@ void Application::initialize()
 
     // Initialize the window
     window->initialize("Bare", 720, AspectRatio(16, 9), 1.2f);
+
+    logger.logInformation("Ready! - Userland awaits you");
 }
 
 void Application::run()

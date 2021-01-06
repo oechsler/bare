@@ -34,9 +34,10 @@ void BgfxRenderer::initialize(const IContextHandle &contextHandle)
     platformData.backBufferDS = nullptr;
 
     Init initParams;
-    initParams.platformData = platformData;
-    init(initParams);
     
+    initParams.platformData = platformData;
+    
+    init(initParams);
     setDebug(BGFX_DEBUG_TEXT);
 
     logger.logInformation("Successfully initialized bgfx renderer");
