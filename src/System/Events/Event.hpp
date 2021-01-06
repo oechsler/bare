@@ -6,13 +6,16 @@ namespace Bare::System::Events
 
 class Event
 {
+    // Variables / properties
     bool handled;
+    // END: Variables / properties
 
 public:
-    virtual ~Event() {}
+    Event();
+    virtual ~Event() = default;
 
     void handle();
-    bool isHandled() const;
+    [[nodiscard]] bool isHandled() const;
 };
 
 } // namespace Bare::System::Events

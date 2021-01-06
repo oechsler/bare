@@ -3,6 +3,12 @@
 namespace Bare::System::Events
 {
 
+Event::Event()
+    : handled(false)
+{
+
+}
+
 void Event::handle()
 {
     handled = true;

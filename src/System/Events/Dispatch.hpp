@@ -1,42 +1,30 @@
 #ifndef DISPATCH_HPP
 #define DISPATCH_HPP
 
-#include <functional>
 #include <queue>
 #include <vector>
 
-#include "Event.hpp"
-#include "Handler.hpp"
+#include "IDispatch.hpp"
 
-using std::function;
 using std::queue;
 using std::vector;
-using namespace std::placeholders;
 
 namespace Bare::System::Events
 {
 
-class Dispatch
+class Dispatch : public IDispatch
 {
-    queue<Event *> events;
+    // Variables / properties
+    queue<Event *const> events;
     vector<Handler> handlers;
-
-    int attach(const Handler &handler);
+    // END: Variables / properties
 
 public:
-    Dispatch();
+    int attach(const Handler &handler) override;
+    void detach(int identifier) override;
 
-    void raise(Event *event);
-
-    template <typename Delegate, typename Converter>
-    int attach(const Delegate &delegate, const Converter &converter)
-    {
-        auto handler = std::bind(&delegate, std::bind(&converter, _1));
-        return attach(handler);
-    }
-    void detach(int identifier);
-
-    void handleEvents();
+    void raise(Event *event) override;
+    void handleEvents() override;
 };
 
 } // namespace Bare::System::Events

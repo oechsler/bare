@@ -3,24 +3,20 @@
 namespace Bare::System::Events
 {
 
-Dispatch::Dispatch()
-{
-}
-
-void Dispatch::raise(Event *event)
-{
-    events.push(event);
-}
-
 int Dispatch::attach(const Handler &handler)
 {
     handlers.push_back(handler);
-    return handlers.size() - 1;
+    return (int) handlers.size() - 1;
 }
 
 void Dispatch::detach(int identifier)
 {
     handlers.erase(handlers.begin() + identifier);
+}
+
+void Dispatch::raise(Event *const event)
+{
+    events.push(event);
 }
 
 void Dispatch::handleEvents()
@@ -30,7 +26,7 @@ void Dispatch::handleEvents()
         auto event = events.front();
         events.pop();
 
-        for (auto attachedHandler : handlers)
+        for (const auto& attachedHandler : handlers)
         {
             attachedHandler(event);
 
