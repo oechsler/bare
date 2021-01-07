@@ -66,3 +66,12 @@ ExternalProject_Add(
         INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
         CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>)
 
+ExternalProject_Add(
+        nameof
+        GIT_REPOSITORY https://github.com/Neargye/nameof
+        GIT_TAG master
+        GIT_SHALLOW 1
+        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/build/nameof
+        BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/nameof
+        INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}
+        CMAKE_ARGS -D CMAKE_INSTALL_PREFIX=<INSTALL_DIR>)

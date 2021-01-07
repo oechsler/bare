@@ -8,7 +8,7 @@
 #include <fmt/format.h>
 #include <fmt/chrono.h>
 #include <fmt/color.h>
-#include <boost/core/demangle.hpp>
+#include <nameof.hpp>
 
 #include "System/Exception.hpp"
 
@@ -22,7 +22,6 @@ using std::free;
 using std::localtime;
 using std::string;
 using std::unique_ptr;
-using boost::core::demangle;
 
 #define LEVEL_DEBUG 0
 #define LEVEL_INFO 1
@@ -69,8 +68,7 @@ void Logger<T>::log(const string &channel, const string &message, format_args ar
     auto timeString = format("{:%H:%M:%S}", *localtime(&now));
 
     // Get the name of the logger's target
-    auto targetName = typeid(T).name();
-    auto targetString = demangle(targetName);
+    auto targetString = nameof::nameof_short_type<T>();
 
     // Finally generate log message
     auto messageString = format("[{0} {1}]({2}): {3}\n", channel, timeString, targetString, message);

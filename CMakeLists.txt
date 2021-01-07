@@ -48,7 +48,7 @@ set(HEADER_FILES src/System/Exception.hpp
         src/System/Renderer/IRenderer.hpp
         src/System/Renderer/BgfxRenderer.hpp
         src/System/Display/IContextHandle.hpp
-        src/System/Display/SdlContextHandle.hpp)
+        src/System/Display/SdlContextHandle.hpp src/System/Display/WindowRenderEvent.hpp)
 
 set(SOURCE_FILES src/main.cpp
         src/System/Exception.cpp
