@@ -3,6 +3,7 @@
 #include <SDL2/SDL_syswm.h>
 
 #include "WindowCloseEvent.hpp"
+#include "WindowRenderEvent.hpp"
 #include "SdlContextHandle.hpp"
 #include "System/Exception.hpp"
 
@@ -76,6 +77,9 @@ void SdlWindow::handleEvents()
             break;
         }
     }
+
+    auto windowRenderEvent = new WindowRenderEvent();
+    _dispatch->raise(windowRenderEvent);
 }
 
 const IContextHandle* SdlWindow::getContextHandle() const

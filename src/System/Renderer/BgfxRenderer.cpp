@@ -13,11 +13,31 @@ using bgfx::shutdown;
 namespace Bare::System::Renderer
 {
 
+void BgfxRenderer::onWindowRender(WindowRenderEvent *const event)
+{
+    if (event == nullptr)
+        return;
+
+    render();
+
+    event->handle();
+}
+
+BgfxRenderer::BgfxRenderer(const shared_ptr<IDispatch> &dispatch, const shared_ptr<IWindow> &window)
+    : _dispatch(dispatch), _window(window), _initialized(false), _onWindowRenderHandle(nullptr)
+{
+}
+
 BgfxRenderer::~BgfxRenderer()
 {
+    if (!_initialized)
+        return;
+
+    _dispatch->detach(_onWindowRenderHandle);
+
     shutdown();
 
-    logger.logInformation("Successfully destroyed the bgfx renderer");
+    _logger.logInformation("Successfully destroyed the bgfx renderer");
 }
 
 void BgfxRenderer::initialize()
@@ -25,9 +45,12 @@ void BgfxRenderer::initialize()
     renderFrame();
 
     PlatformData platformData;
+    auto contextHandle = _window->getContextHandle();
 
-    platformData.ndt = contextHandle.getDisplayTarget();
-    platformData.nwh = contextHandle.getWindowHandle();
+    platformData.ndt = contextHandle->getDisplayTarget();
+    platformData.nwh = contextHandle->getWindowHandle();
+
+    delete contextHandle;
 
     platformData.context = nullptr;
     platformData.backBuffer = nullptr;
@@ -40,12 +63,18 @@ void BgfxRenderer::initialize()
     init(initParams);
     setDebug(BGFX_DEBUG_TEXT);
 
-    logger.logInformation("Successfully initialized bgfx renderer");
+    _onWindowRenderHandle = _dispatch->attach([this](Event *event)
+    {
+       onWindowRender(WindowRenderEvent::Convert(event));
+    });
+
+    _logger.logInformation("Successfully initialized bgfx renderer");
+    _initialized = true;
 }
 
 void BgfxRenderer::render()
 {
-    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x333333ff, 1.0f, 0);
+    bgfx::setViewClear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000ff, 1.0f, 0);
     bgfx::setViewRect(0, 0, 0, 1280, 720);
 
     bgfx::dbgTextClear();

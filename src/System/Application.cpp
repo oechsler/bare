@@ -15,59 +15,65 @@ namespace Bare::System
 
 void Application::onWindowClose(WindowCloseEvent *const event)
 {
-    running = false;
+    if (event == nullptr)
+        return;
+
+    _running = false;
 
     event->handle();
 }
 
 Application::Application(ContainerBuilder *containerBuilder)
-    : containerBuilder(containerBuilder), running(true), onWindowCloseHandle(0)
+    : _containerBuilder(containerBuilder), _running(true), _onWindowCloseHandle(nullptr)
 {
-    logger.logInformation("Bare is warming up");
+    _logger.logInformation("Bare is warming up");
 
     // Register default dependency injection modules
-    containerBuilder->registerType<Dispatch>().as<IDispatch>().singleInstance();
-    containerBuilder->registerType<SdlWindow>().as<IWindow>().singleInstance();
-    containerBuilder->registerType<BgfxRenderer>().as<IRenderer>().singleInstance();
+    _containerBuilder->registerType<Dispatch>().as<IDispatch>().singleInstance();
+    _containerBuilder->registerType<SdlWindow>().as<IWindow>().singleInstance();
+    _containerBuilder->registerType<BgfxRenderer>().as<IRenderer>().singleInstance();
 }
 
 Application::~Application()
 {
-    logger.logInformation("Hold on! We're going down");
+    _logger.logInformation("Hold on! We're going down");
 
     // Detach event handlers
-    dispatch->detach(onWindowCloseHandle);
+    _dispatch->detach(_onWindowCloseHandle);
 }
 
 void Application::initialize()
 {
     // Build / generate the IoC container
-    container = containerBuilder->build();
+    _container = _containerBuilder->build();
 
     // Resolve dependencies (manually)
-    dispatch = container->resolve<IDispatch>();
-    window = container->resolve<IWindow>();
+    _dispatch = _container->resolve<IDispatch>();
+    _window = _container->resolve<IWindow>();
+    _renderer = _container->resolve<IRenderer>();
 
     // Attach event handlers
-    onWindowCloseHandle = dispatch->attach([this](Event* event) {
+    _onWindowCloseHandle = _dispatch->attach([this](Event *event)
+    {
         onWindowClose(WindowCloseEvent::Convert(event));
     });
 
-    // Initialize the window
-    window->initialize("Bare", 720, AspectRatio(16, 9), 1.2f);
+    // Initialize the window and renderer
+    _window->initialize("Bare", 720, AspectRatio(16, 9), 1.2f);
+    _renderer->initialize();
 
-    logger.logInformation("Ready! - Userland awaits you");
+    _logger.logInformation("Ready! - Userland awaits you");
 }
 
 void Application::run()
 {
     initialize();
 
-    while (running)
+    while (_running)
     {
-        window->handleEvents();
+        _window->handleEvents();
 
-        dispatch->handleEvents();
+        _dispatch->handleEvents();
     }
 }
 

@@ -7,13 +7,15 @@
 namespace Bare::System::Events
 {
 
+typedef const char * HandlerIdentifier;
+
 class IDispatch
 {
 public:
     virtual ~IDispatch() = default;
 
-    virtual int attach(const Handler &handler) = 0;
-    virtual void detach(int identifier) = 0;
+    virtual HandlerIdentifier attach(const Handler &handler) = 0;
+    virtual void detach(HandlerIdentifier identifier) = 0;
 
     virtual void raise(Event *event) = 0;
     virtual void handleEvents() = 0;
