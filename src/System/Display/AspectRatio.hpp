@@ -6,7 +6,7 @@ namespace Bare::System::Display
 
 struct AspectRatio
 {
-    int x, y;
+    int _x, _y;
 
     AspectRatio();
     AspectRatio(int x, int y);

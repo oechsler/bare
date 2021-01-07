@@ -9,14 +9,14 @@ namespace Bare::System::Display
 
 class SdlContextHandle : public IContextHandle
 {
-    void* displayHandle;
-    void* windowHandle;
+    void* _displayTarget;
+    void* _windowHandle;
 
 public:
     explicit SdlContextHandle(void *displayHandle, void *windowHandle);
     ~SdlContextHandle() override = default;
 
-    [[nodiscard]] void *getDisplayHandle() const override;
+    [[nodiscard]] void *getDisplayTarget() const override;
 
     [[nodiscard]] void *getWindowHandle() const override;
 };

@@ -24,7 +24,7 @@ class BgfxRenderer : public IRenderer
 public:
     ~BgfxRenderer() override;
 
-    void initialize(const IContextHandle &contextHandle) override;
+    void initialize() override;
 
     void render() override;
 };

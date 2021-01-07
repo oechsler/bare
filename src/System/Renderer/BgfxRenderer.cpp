@@ -20,13 +20,13 @@ BgfxRenderer::~BgfxRenderer()
     logger.logInformation("Successfully destroyed the bgfx renderer");
 }
 
-void BgfxRenderer::initialize(const IContextHandle &contextHandle)
+void BgfxRenderer::initialize()
 {
     renderFrame();
 
     PlatformData platformData;
 
-    platformData.ndt = contextHandle.getDisplayHandle();
+    platformData.ndt = contextHandle.getDisplayTarget();
     platformData.nwh = contextHandle.getWindowHandle();
 
     platformData.context = nullptr;

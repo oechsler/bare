@@ -20,19 +20,18 @@ namespace Bare::System::Display
 class SdlWindow : public IWindow
 {
     // Dependency injection
-    shared_ptr<IDispatch> dispatch;
-
-    shared_ptr<IRenderer> renderer;
+    shared_ptr<IDispatch> _dispatch;
     // END: Dependency injection
 
     // Local instances
-    Logger<SdlWindow> logger;
+    Logger<SdlWindow> _logger;
     // END: Local instances
 
     // Variables / properties
-    SDL_Window *windowHandle;
-    int initialWidth, initialHeight;
-    int width, height;
+    SDL_Window *_windowHandle;
+    AspectRatio _aspect;
+    int _initialWidth, _initialHeight;
+    int _width, _height;
     // END: Variables / properties
 
     // Event handlers
@@ -40,12 +39,22 @@ class SdlWindow : public IWindow
     // END: Event handlers
 
 public:
-    explicit SdlWindow(const shared_ptr<IDispatch> &dispatch, const shared_ptr<IRenderer> &renderer);
+    explicit SdlWindow(const shared_ptr<IDispatch> &dispatch);
     ~SdlWindow() override;
 
-    void initialize(const string &title, int size, AspectRatio aspect, float scale) override;
+    void initialize(const string &title, int size, const AspectRatio &aspect, float scale) override;
 
     void handleEvents() override;
+
+    // Getters and Setters
+    [[nodiscard]] const IContextHandle* getContextHandle() const override;
+
+    [[nodiscard]] const AspectRatio& getAspectRatio() const override;
+
+    [[nodiscard]] int getWidth() const override;
+
+    [[nodiscard]] int getHeight() const override;
+    // END: Getters and Setters
 };
 
 } // namespace Bare::System::Display

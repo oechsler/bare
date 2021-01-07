@@ -46,23 +46,23 @@ namespace Bare::System::Logging
 template <typename T>
 class Logger
 {
-    void log(const string &channel, const string &message, format_args args);
+    void log(const string &channel, const string &message, format_args args) const;
 
 public:
     template <typename... Args>
-    void logDebug(const string &message, const Args &... args);
+    void logDebug(const string &message, const Args &... args) const;
     template <typename... Args>
-    void logInformation(const string &message, const Args &... args);
+    void logInformation(const string &message, const Args &... args) const;
     template <typename... Args>
-    void logWarning(const string &message, const Args &... args);
+    void logWarning(const string &message, const Args &... args) const;
     template <typename... Args>
-    void logError(const string &message, const Args &... args);
+    void logError(const string &message, const Args &... args) const;
     template <typename... Args>
-    void logFatal(const string &message, const Args &... args);
+    void logFatal(const string &message, const Args &... args) const;
 };
 
 template <typename T>
-void Logger<T>::log(const string &channel, const string &message, format_args args)
+void Logger<T>::log(const string &channel, const string &message, format_args args) const
 {
     // Generate current timestamp
     auto now = time(nullptr);
@@ -84,7 +84,7 @@ void Logger<T>::log(const string &channel, const string &message, format_args ar
 
 template <typename T>
 template <typename... Args>
-void Logger<T>::logDebug(const string &message, const Args &... args)
+void Logger<T>::logDebug(const string &message, const Args &... args) const
 {
 #if ! LOG_LEVEL > LEVEL_DEBUG
     log(CHANNEL_DEBUG, message, make_format_args(args...));
@@ -93,7 +93,7 @@ void Logger<T>::logDebug(const string &message, const Args &... args)
 
 template <typename T>
 template <typename... Args>
-void Logger<T>::logInformation(const string &message, const Args &... args)
+void Logger<T>::logInformation(const string &message, const Args &... args) const
 {
 #if !(LOG_LEVEL > LEVEL_INFO)
     log(CHANNEL_INFO, message, make_format_args(args...));
@@ -102,7 +102,7 @@ void Logger<T>::logInformation(const string &message, const Args &... args)
 
 template <typename T>
 template <typename... Args>
-void Logger<T>::logWarning(const string &message, const Args &... args)
+void Logger<T>::logWarning(const string &message, const Args &... args) const
 {
 #if !(LOG_LEVEL > LEVEL_WARN)
     log(CHANNEL_WARN, message, make_format_args(args...));
@@ -111,7 +111,7 @@ void Logger<T>::logWarning(const string &message, const Args &... args)
 
 template <typename T>
 template <typename... Args>
-void Logger<T>::logError(const string &message, const Args &... args)
+void Logger<T>::logError(const string &message, const Args &... args) const
 {
 #if !(LOG_LEVEL > LEVEL_ERROR)
     log(CHANNEL_ERROR, message, make_format_args(args...));
@@ -120,7 +120,7 @@ void Logger<T>::logError(const string &message, const Args &... args)
 
 template <typename T>
 template <typename... Args>
-void Logger<T>::logFatal(const string &message, const Args &... args)
+void Logger<T>::logFatal(const string &message, const Args &... args) const
 {
 #if LOG_LEVEL <= LEVEL_FATAL
     log(CHANNEL_FATAL, message, make_format_args(args...));

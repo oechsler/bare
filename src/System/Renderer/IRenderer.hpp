@@ -13,7 +13,7 @@ class IRenderer
 public:
     virtual ~IRenderer() = default;
 
-    virtual void initialize(const IContextHandle &contextHandle) = 0;
+    virtual void initialize() = 0;
 
     virtual void render() = 0;
 };

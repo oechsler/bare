@@ -4,18 +4,18 @@ namespace Bare::System::Display
 {
 
 SdlContextHandle::SdlContextHandle(void *displayHandle, void *windowHandle)
-    : displayHandle(displayHandle), windowHandle(windowHandle)
+    : _displayTarget(displayHandle), _windowHandle(windowHandle)
 {
 }
 
-void *SdlContextHandle::getDisplayHandle() const
+void *SdlContextHandle::getDisplayTarget() const
 {
-    return displayHandle;
+    return _displayTarget;
 }
 
 void *SdlContextHandle::getWindowHandle() const
 {
-    return windowHandle;
+    return _windowHandle;
 }
 
 

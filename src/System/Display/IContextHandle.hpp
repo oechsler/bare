@@ -9,7 +9,7 @@ class IContextHandle
 public:
     virtual ~IContextHandle() = default;
 
-    [[nodiscard]] virtual void *getDisplayHandle() const = 0;
+    [[nodiscard]] virtual void *getDisplayTarget() const = 0;
 
     [[nodiscard]] virtual void *getWindowHandle() const = 0;
 };

@@ -11,9 +11,9 @@ using Bare::System::Exception;
 namespace Bare::System::Display
 {
 
-SdlWindow::SdlWindow(const shared_ptr<IDispatch> &dispatch, const shared_ptr<IRenderer> &renderer)
-    : dispatch(dispatch), renderer(renderer), windowHandle(nullptr), initialWidth(0), initialHeight(0),
-    width(0), height(0)
+SdlWindow::SdlWindow(const shared_ptr<IDispatch> &dispatch)
+    : _dispatch(dispatch), _windowHandle(nullptr), _aspect(1, 1), _initialWidth(0), _initialHeight(0),
+      _width(0), _height(0)
 {
 }
 
@@ -21,25 +21,26 @@ SdlWindow::~SdlWindow()
 {
     // TODO: Detach event handlers
 
-    SDL_DestroyWindow(windowHandle);
+    SDL_DestroyWindow(_windowHandle);
 
     SDL_Quit();
 }
 
-void SdlWindow::initialize(const string &title, int size, AspectRatio aspect, float scale)
+void SdlWindow::initialize(const string &title, int size, const AspectRatio &aspect, float scale)
 {
-    initialWidth = (int) ((float) size * scale);
-    initialHeight = (int) ((float) aspect.getHeight(size) * scale);
+    _aspect = aspect;
+    _initialWidth = (int) ((float) size * scale);
+    _initialHeight = (int) ((float) aspect.getHeight(size) * scale);
 
-    width = initialWidth;
-    height = initialHeight;
+    _width = _initialWidth;
+    _height = _initialHeight;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER))
     {
         auto error = string(SDL_GetError());
         auto errorMessage = "SDL could not be initialized: " + error;
 
-        logger.logError(errorMessage);
+        _logger.logError(errorMessage);
         throw Exception(errorMessage);
     }
 
@@ -49,43 +50,16 @@ void SdlWindow::initialize(const string &title, int size, AspectRatio aspect, fl
                  SDL_WINDOW_ALLOW_HIGHDPI |
                  SDL_WINDOW_SHOWN;
 
-    windowHandle = SDL_CreateWindow(title.c_str(), position, position, width, height, flags);
-    if (windowHandle == nullptr)
+    _windowHandle = SDL_CreateWindow(title.c_str(), position, position, _width, _height, flags);
+    if (_windowHandle == nullptr)
     {
         auto error = string(SDL_GetError());
         auto errorMessage = "SDL window could not be created: " + error;
 
-        logger.logFatal(errorMessage);
+        _logger.logFatal(errorMessage);
     }
 
-    SDL_SetWindowMinimumSize(windowHandle, width, height);
-
-    SDL_SysWMinfo wmInfo;
-    SDL_VERSION(&wmInfo.version);
-    if (!SDL_GetWindowWMInfo(windowHandle, &wmInfo))
-    {
-        auto error = string(SDL_GetError());
-        auto errorMessage = "SDL window manager info could not be created: " + error;
-
-        logger.logFatal(errorMessage);
-    }
-
-    const SdlContextHandle* contextHandle;
-    switch (wmInfo.subsystem) {
-        case SDL_SYSWM_COCOA:
-            contextHandle = new SdlContextHandle(nullptr, wmInfo.info.cocoa.window);
-
-            break;
-        default:
-            auto errorMessage = "SDL does not support this platform";
-
-            logger.logError(errorMessage);
-            throw Exception(errorMessage);
-    }
-
-    renderer->initialize(*contextHandle);
-
-    delete contextHandle;
+    SDL_SetWindowMinimumSize(_windowHandle, _width, _height);
 }
 
 void SdlWindow::handleEvents()
@@ -98,12 +72,51 @@ void SdlWindow::handleEvents()
         {
         case SDL_QUIT:
             auto windowCloseEvent = new WindowCloseEvent();
-            dispatch->raise(windowCloseEvent);
+            _dispatch->raise(windowCloseEvent);
             break;
         }
     }
+}
 
-    renderer->render();
+const IContextHandle* SdlWindow::getContextHandle() const
+{
+    SDL_SysWMinfo wmInfo;
+    SDL_VERSION(&wmInfo.version)
+
+    if (!SDL_GetWindowWMInfo(_windowHandle, &wmInfo))
+    {
+        auto error = string(SDL_GetError());
+        auto errorMessage = "SDL window manager info could not be created: " + error;
+
+        _logger.logFatal(errorMessage);
+    }
+
+    switch (wmInfo.subsystem)
+    {
+    case SDL_SYSWM_COCOA:
+        return new SdlContextHandle(nullptr, wmInfo.info.cocoa.window);
+    default:
+        auto errorMessage = "SDL does not support this platform";
+
+        _logger.logError(errorMessage);
+    }
+
+    return nullptr;
+}
+
+const AspectRatio & SdlWindow::getAspectRatio() const
+{
+    return _aspect;
+}
+
+int SdlWindow::getWidth() const
+{
+    return _width;
+}
+
+int SdlWindow::getHeight() const
+{
+    return _height;
 }
 
 } // namespace Bare::System::Display
